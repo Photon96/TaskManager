@@ -1,0 +1,118 @@
+﻿<Window x:Class="TaskManagerProjekt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskManagerProjekt"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="800">
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="500"/>
+            <RowDefinition Height="300"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer>
+                <ListView x:Name="ProcessesList" ItemsSource="{Binding Processes}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" MouseDoubleClick="GetSelectedProcess">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding ProcessName}" />
+                            <GridViewColumn Header="id" Width="50" DisplayMemberBinding="{Binding Id}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </ScrollViewer>
+            <Grid Grid.Column="1" x:Name="FilterTextGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0">Filter by name</Label>
+                    <TextBox Grid.Column="1" x:Name="FilterName_TextBox" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </Grid>
+                <Button Grid.Row="1" Background="Green" Command="{Binding Path=RefreshProcessesCommand}">Refresh</Button>
+                <Grid Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0">Timeout</Label>
+                    <TextBox Grid.Column="1" x:Name="TimeoutProcess_TextBox"></TextBox>
+                </Grid>
+               
+                <Button Grid.Row="3" x:Name="StartProcess_Btn" Click="StartProcess_Btn_OnClick">Start process</Button>
+                <ProgressBar Grid.Row="4" x:Name="Process_PB"></ProgressBar>
+            </Grid>
+            
+        </Grid>
+        <Grid Grid.Row="1" Margin="0 25 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <local:ProcessInfoControl Grid.Row="0" 
+                                      ProcessName="{Binding SelectedProcess.ProcessName, Mode=OneWay}" 
+                                      ProcessId="{Binding SelectedProcess.Id}"
+                                      ProcessNonPagedMemory="{Binding SelectedProcess.NonpagedSystemMemorySize64}"
+                                      ProcessPagedMemory="{Binding SelectedProcess.PagedSystemMemorySize64}"
+                                      ProcessPrivateMemory="{Binding SelectedProcess.PrivateMemorySize64}"
+                                      ProcessVirtualMemory="{Binding SelectedProcess.VirtualMemorySize64}"
+                                      ThreadsNumber="{Binding SelectedProcess.Threads.Count}"
+                                      Priority="{Binding SelectedProcess.PriorityClass}">
+            </local:ProcessInfoControl>
+            <!--<Label Grid.Row="0" Grid.Column="0" Content="Process id:" />
+            <Label Grid.Row="0" Grid.Column="1" Content="{Binding SelectedProcess.Id, Mode=OneWay}" />
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Process name:" />
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding SelectedProcess.ProcessName, Mode=OneWay}" />
+
+            <Label Grid.Row="2" Grid.Column="0" Content="Nonpaged memory size:" />
+            <Label Grid.Row="2" Grid.Column="1" Content="{Binding SelectedProcess.NonpagedSystemMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="3" Grid.Column="0" Content="Paged memory size:" />
+            <Label Grid.Row="3" Grid.Column="1" Content="{Binding SelectedProcess.PagedMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="4" Grid.Column="0" Content="Private memory size:" />
+            <Label Grid.Row="4" Grid.Column="1" Content="{Binding SelectedProcess.PrivateMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="5" Grid.Column="0" Content="Virtual memory size:" />
+            <Label Grid.Row="5" Grid.Column="1" Content="{Binding SelectedProcess.VirtualMemorySize64, Mode=OneWay}" />
+
+            
+            <Label Grid.Row="6" Grid.Column="0" Content="Threads number:" />
+            <Label Grid.Row="6" Grid.Column="1" Content="{Binding SelectedProcess.Threads.Count, Mode=OneWay}" />
+
+            <Label Grid.Row="7" Grid.Column="0" Content="Priority:" />
+            <Label Grid.Row="7" Grid.Column="1" Content="{Binding SelectedProcess.PriorityClass, Mode=OneWay}" />
+-->
+            <Grid Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"></ColumnDefinition>
+                    <ColumnDefinition Width="140"></ColumnDefinition>
+                    <ColumnDefinition Width="140"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" x:Name="KillProcess_Btn" Background="Red" Click="KillProcess_OnClick"  IsEnabled="{Binding Path=KillProcessBtnEnabled}">Kill process</Button>
+                <ComboBox Grid.Row="0" Grid.Column="1" Name="Priorities"   VerticalContentAlignment="Center"/>
+                <Button Grid.Row="0" Grid.Column="2"  x:Name="ChangePriority_Btn" Content="Change priority" Background="AliceBlue" Click="ChangePriority_OnClick" IsEnabled="{Binding Path=ChangePriorityBtnEnabled}"/>
+            </Grid>
+            
+        </Grid>
+        
+    </Grid>
+</Window>
